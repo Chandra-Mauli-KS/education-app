@@ -1,252 +1,232 @@
-
-import 'package:educational/models/lesson.dart';
 import 'package:flutter/material.dart';
+import '../models/course.dart';
+import '../models/lesson.dart';
 import '../widget/custom_icon_button.dart';
 import '../widget/custom_video._play.dart';
 import '../widget/list_of_lesson.dart';
-import 'course.dart';
 
 class CourseDetailScreen extends StatefulWidget {
-  const CourseDetailScreen({
-    super.key,
-    required this.course,
-  });
   final Course course;
+  const CourseDetailScreen({super.key, required this.course});
 
   @override
-  State<CourseDetailScreen> createState() {
-    return _CourseDetailScreenState();
-  }
+  State<CourseDetailScreen> createState() => _CourseDetailScreenState();
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
-  int selectedIndex = 0;
+  int selectedTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    CustomIconButton(
-                        child: const Icon(Icons.arrow_back),
-                        height: 35,
-                        width: 40,
-                        ontap: () {
-                          Navigator.pop(context);
-                        }),
-                    const Spacer(),
-                    const Text(
-                      'Flutter',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-                const SizedBox(height: 25.0),
-                CustomVideo(),
-                const SizedBox(height: 15.0),
-                Text(
-                  widget.course.name,
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  "Author ${widget.course.author}",
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                const Row(
-                  children: [
-                    Icon(
-                      Icons.star_border_outlined,
-                      color: Colors.black45,
-                    ),
-                    Text(
-                      '4.8',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.black45),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Icon(
-                        Icons.alarm_rounded,
-                      ),
-                    ),
-                    Text(
-                      '72 Hours',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black45),
-                    ),
-                    Spacer(),
-                    Text(
-                      '\$50',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.deepPurpleAccent),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                MyTabView(
-                    changeTab: (int index) {
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    },
-                    index: selectedIndex),
-                selectedIndex == 0 ? const Playlist() : const Description(),
-              ],
-            ),
-          ),
-        ),
-        bottomSheet: BottomSheet(
-          onClosing: () {},
-          builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 🔹 Header
+              Row(
                 children: [
                   CustomIconButton(
-                      child: const Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                        size: 30,
-                      ),
-                      height: 40,
-                      width: 40,
-                      ontap: () {}),
-                  const SizedBox(width: 20.0),
+                    child: const Icon(Icons.arrow_back),
+                    height: 40,
+                    width: 40,
+                    ontap: () => Navigator.pop(context),
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
-                    child: CustomIconButton(
-                        child: const Text(
-                          'Enroll Now',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                        color: Colors.deepPurpleAccent,
-                        height: 45,
-                        width: 45,
-                        ontap: () {}),
-                  )
+                    child: Text(
+                      widget.course.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
               ),
-            );
-          },
-        ));
+
+              const SizedBox(height: 16),
+              CustomVideo(),
+
+              const SizedBox(height: 16),
+              Text(
+                widget.course.name,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              Text(
+                "Author: ${widget.course.author}",
+                style: const TextStyle(fontSize: 15, color: Colors.grey),
+              ),
+
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  const Icon(Icons.star, color: Colors.amber, size: 20),
+                  const SizedBox(width: 4),
+                  const Text("4.8"),
+                  const SizedBox(width: 16),
+                  const Icon(Icons.access_time, color: Colors.grey),
+                  const SizedBox(width: 4),
+                  const Text("72 Hours"),
+                  const Spacer(),
+                  Text(
+                    '\₹50',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+              MyTabView(
+                selectedIndex: selectedTabIndex,
+                onTabSelected: (index) {
+                  setState(() => selectedTabIndex = index);
+                },
+              ),
+
+              const SizedBox(height: 10),
+              Expanded(
+                child: selectedTabIndex == 0
+                    ? const Playlist()
+                    : const Description(),
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      // 🔸 Bottom Enroll Section
+      bottomSheet: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        height: 70,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            CustomIconButton(
+              child: const Icon(Icons.favorite, color: Colors.red),
+              height: 45,
+              width: 45,
+              ontap: () {},
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurpleAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {},
+                child: const Text(
+                  'Enroll Now',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
+// 🔹 Playlist Widget
 class Playlist extends StatelessWidget {
   const Playlist({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: ListView.separated(
-      itemBuilder: (context, index) {
-        return ListOfLesson(lesson: lessonList[index]);
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return const SizedBox(
-          height: 20,
-        );
-      },
+    return ListView.separated(
+      padding: const EdgeInsets.only(bottom: 100, top: 12),
       itemCount: lessonList.length,
-      padding: EdgeInsets.only(top: 20, bottom: 40),
-      shrinkWrap: true,
-    ));
+      itemBuilder: (context, index) => ListOfLesson(lesson: lessonList[index]),
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+    );
   }
 }
 
+// 🔸 Description Widget
 class Description extends StatelessWidget {
   const Description({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(top: 20),
+    return const SingleChildScrollView(
+      padding: EdgeInsets.only(bottom: 100, top: 12),
       child: Text(
-          '''Flutter is an open-source UI software development kit created by Google. 
-      It is used to develop cross-platform applications from a single codebase for various platforms, 
-      including Android, iOS, web, Linux, macOS, and Windows  '''),
-    );
-  }
-}
-
-class MyTabView extends StatefulWidget {
-  final Function(int) changeTab;
-  final int index;
-  const MyTabView({super.key, required this.changeTab, required this.index});
-
-  @override
-  State<MyTabView> createState() => _MyTabViewState();
-}
-
-class _MyTabViewState extends State<MyTabView> {
-  final List<String> myList = ['Playlist (22)', 'Description'];
-
-  Widget buildTag(int index) {
-    return GestureDetector(
-      onTap: () {
-        widget.changeTab(index);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.1,
-            vertical: 15.0),
-        decoration: BoxDecoration(
-            color: widget.index == index ? Colors.deepPurpleAccent : null,
-            borderRadius: BorderRadius.circular(10.0)),
-        child: Text(
-          myList[index],
-          style: TextStyle(
-            color: widget.index != index ? Colors.black : Colors.white,
-            fontWeight:
-                widget.index == index ? FontWeight.bold : FontWeight.normal,
-            fontSize: 16,
-          ),
-        ),
+        '''Flutter is an open-source UI toolkit developed by Google for building beautiful, natively compiled applications for mobile, web, desktop from a single codebase.''',
+        style: TextStyle(fontSize: 15, height: 1.5),
       ),
     );
   }
+}
+
+// 🔘 TabView Widget
+class MyTabView extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onTabSelected;
+  const MyTabView({
+    super.key,
+    required this.selectedIndex,
+    required this.onTabSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final tabs = ['Playlist (22)', 'Description'];
+
     return Container(
-      padding: const EdgeInsets.all(5.0),
-      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.9),
-        color: Colors.grey.shade200,
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
-        children: myList
-            .asMap()
-            .entries
-            .map((MapEntry map) => buildTag(map.key))
-            .toList(),
+        children: List.generate(tabs.length, (index) {
+          final isActive = index == selectedIndex;
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => onTabSelected(index),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color:
+                      isActive ? Colors.deepPurpleAccent : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  tabs[index],
+                  style: TextStyle(
+                    color: isActive ? Colors.white : Colors.black87,
+                    fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
